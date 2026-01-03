@@ -1,5 +1,6 @@
 package utils;
 
+import command.CommandInvoker;
 import helper.BoardManager;
 import helper.FoodManager;
 import helper.InputReader;
@@ -15,6 +16,7 @@ public class SnakeGame {
     private final FoodManager foodManager;
     private final MovementStrategy movementStrategy;
     private int snakeSize;
+    private CommandInvoker commandInvoker = new CommandInvoker();
 
     public SnakeGame(int width, int height,
                      MovementStrategy movementStrategy,
