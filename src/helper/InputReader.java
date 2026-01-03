@@ -1,27 +1,28 @@
 package helper;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 public class InputReader implements Runnable {
 
-    private final Scanner scanner;
     private volatile String latestInput = "R";
     private volatile boolean running = true;
 
-    public InputReader(Scanner scanner) {
-        this.scanner = scanner;
-    }
-
     @Override
     public void run() {
-        while (running) {
-            if (!scanner.hasNextLine()) break;
+        BufferedReader reader =
+                new BufferedReader(new InputStreamReader(System.in));
 
-            String input = scanner.nextLine().trim().toUpperCase();
-            if (input.equals("U") || input.equals("D")
-                    || input.equals("L") || input.equals("R")) {
-                latestInput = input;
-            }
+        while (running) {
+            try {
+                if (reader.ready()) {
+                    String input = reader.readLine().trim().toUpperCase();
+                    if (input.matches("[UDLR]")) {
+                        latestInput = input;
+                    }
+                }
+            } catch (IOException ignored) {}
         }
     }
 
@@ -31,5 +32,6 @@ public class InputReader implements Runnable {
 
     public void stop() {
         running = false;
+        System.out.print("Do you want to play again? (y = yes, n = no): ");
     }
 }

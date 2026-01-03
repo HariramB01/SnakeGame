@@ -33,7 +33,7 @@ public class SnakeGame {
 
     public void play(Scanner sc) {
 
-        InputReader inputReader = new InputReader(sc);
+        InputReader inputReader = new InputReader();
         Thread inputThread = new Thread(inputReader);
         inputThread.setDaemon(true);
         inputThread.start();

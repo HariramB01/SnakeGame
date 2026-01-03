@@ -54,6 +54,8 @@ public class SnakeGameManager {
                 choice = sc.nextLine().trim().toLowerCase();
                 if (choice.equals("y") || choice.equals("n")) {
                     break;
+                } else{
+                    System.out.print("Enter valid input either y/n: ");
                 }
             }
 
