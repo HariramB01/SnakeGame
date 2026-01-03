@@ -7,13 +7,6 @@ public class Player {
     private int wonCount;
     private int lostCount;
 
-    public Player(int id, String playerName, int wonCount, int lostCount) {
-        this.id = id;
-        this.playerName = playerName;
-        this.wonCount = wonCount;
-        this.lostCount = lostCount;
-    }
-
     public Player(int id, String playerName) {
         this.id = id;
         this.playerName = playerName;
@@ -23,20 +16,8 @@ public class Player {
         return new Player(size + 1 * -1, "Guest");
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getPlayerName() {
         return playerName;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
     }
 
     public int getWonCount() {

@@ -10,26 +10,13 @@ public class HumanMovementStrategy implements MovementStrategy {
         int row = currentHead.getRow();
         int col = currentHead.getCol();
 
-        if (direction == null || direction.isEmpty()) {
-            return currentHead;
-        }
-
         switch (direction.toUpperCase()) {
-            case "U":
-                row--;
-                break;
-            case "D":
-                row++;
-                break;
-            case "L":
-                col--;
-                break;
-            case "R":
-                col++;
-                break;
+            case "U": row -= 1; break;
+            case "D": row += 1; break;
+            case "L": col -= 1; break;
+            case "R": col += 1; break;
             default:
-                // Invalid input → no movement
-                return currentHead;
+                return null;
         }
 
         return new Pair(row, col);

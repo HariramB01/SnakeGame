@@ -2,6 +2,7 @@ package utils;
 
 import helper.BoardManager;
 import helper.FoodManager;
+import helper.InputReader;
 import strategy.MovementStrategy;
 
 import java.util.Scanner;
@@ -32,13 +33,25 @@ public class SnakeGame {
 
     public void play(Scanner sc) {
 
+        InputReader inputReader = new InputReader(sc);
+        Thread inputThread = new Thread(inputReader);
+        inputThread.setDaemon(true);
+        inputThread.start();
+
         // print initial board
         printSnakeBoard();
 
+        String direction = "R";
+
         while (player.isAlive()) {
 
-            System.out.print("Enter your move U/D/L/R: ");
-            String direction = sc.nextLine().trim();
+//            System.out.print("Enter your move U/D/L/R: ");
+//            direction = sc.nextLine().trim();
+
+            String input = inputReader.getLatestInput();
+            if (input != null && isValidDirection(input.toUpperCase(), direction)) {
+                direction = input;
+            }
 
             // ignore empty input
             if (direction.isEmpty()) {
@@ -50,6 +63,11 @@ public class SnakeGame {
             // 1. Calculate new head
             Pair newHead = movementStrategy.getNextPosition(currentHead, direction);
 
+            if(newHead==null){
+                System.out.println("Enter valid direction U/D/L/R");
+                continue;
+            }
+
             int newHeadRow = newHead.getRow();
             int newHeadCol = newHead.getCol();
 
@@ -58,7 +76,7 @@ public class SnakeGame {
                 if (boardManager.isOutOfBounds(newHeadRow, newHeadCol)) {
                     System.out.println("💥 Hit the wall! Game Over.");
                     player.setAlive(false);
-                    player.setWonCount(player.getWonCount()-1);
+                    player.setLostCount(player.getLostCount()+1);
                     break;
                 }
             } else {
@@ -73,7 +91,7 @@ public class SnakeGame {
             if (boardManager.hasCollision(snake, newHead, currentTail)) {
                 System.out.println("💥 Snake bit itself! Game Over.");
                 player.setAlive(false);
-                player.setWonCount(player.getWonCount()-1);
+                player.setLostCount(player.getLostCount()+1);
                 break;
             }
 
@@ -114,7 +132,16 @@ public class SnakeGame {
             printSnakeBoard();
             sleep();
         }
+        inputReader.stop();
     }
+
+    private boolean isValidDirection(String newDir, String currentDir) {
+        return (newDir.equals("U") && !currentDir.equals("D")) ||
+                (newDir.equals("D") && !currentDir.equals("U")) ||
+                (newDir.equals("L") && !currentDir.equals("R")) ||
+                (newDir.equals("R") && !currentDir.equals("L"));
+    }
+
 
     private void printSnakeBoard() {
         int height = boardManager.getBoard().getHeight();
@@ -153,7 +180,7 @@ public class SnakeGame {
 
     private void sleep() {
         try {
-            Thread.sleep(150);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
